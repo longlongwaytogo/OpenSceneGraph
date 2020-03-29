@@ -58,6 +58,7 @@ class OSG_EXPORT DeleteHandler
         inline void doDelete(const Referenced* object) { delete object; }
 
         /** Flush objects that are ready to be fully deleted.*/
+        /** 刷新当前对象，将需要删除的对象进行删除*/
         virtual void flush();
 
         /** Flush all objects that the DeleteHandler holds.
@@ -77,13 +78,13 @@ class OSG_EXPORT DeleteHandler
             _currentFrameNumber(0) {}
         DeleteHandler operator = (const DeleteHandler&) { return *this; }
 
-        unsigned int            _numFramesToRetainObjects;
-        unsigned int            _currentFrameNumber;
-        OpenThreads::Mutex      _mutex;
+        unsigned int            _numFramesToRetainObjects; // 多少帧需要保留对象
+        unsigned int            _currentFrameNumber;      
+        OpenThreads::Mutex      _mutex;   
         ObjectsToDeleteList     _objectsToDelete;
 
 };
 
-}
+} 
 
 #endif

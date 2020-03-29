@@ -25,7 +25,11 @@
 
 using namespace osg;
 using namespace osgUtil;
-
+/** depends_on 用于设置依赖关系，保证全局变量的初始化顺序
+* Fri, 5 Jun 2009 11:48:35 +0000
+* Author : Robert Osfield
+* Added depends_on template and usage in RenderBin to help with static variable destruction ordering
+*/
 class RenderBinPrototypeList : osg::depends_on<OpenThreads::Mutex*, osg::Referenced::getGlobalReferencedMutex>,
                                public osg::Referenced, public std::map< std::string, osg::ref_ptr<RenderBin> >
 {

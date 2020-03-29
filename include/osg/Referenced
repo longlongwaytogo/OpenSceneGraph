@@ -205,6 +205,7 @@ inline int Referenced::unref() const
 
 // intrusive_ptr_add_ref and intrusive_ptr_release allow
 // use of osg Referenced classes with boost::intrusive_ptr
+// intrusive_ptr_add_ref 和 intrusive_ptr_release 允许使用boost库的instrusive_ptr管理内存
 inline void intrusive_ptr_add_ref(Referenced* p) { p->ref(); }
 inline void intrusive_ptr_release(Referenced* p) { p->unref(); }
 

@@ -36,6 +36,9 @@ void DeleteHandler::flush()
         // gather all the objects to delete whilst holding the mutex to the _objectsToDelete
         // list, but delete the objects outside this scoped lock so that if any objects deleted
         // unref their children then no deadlock happens.
+        // 收集所有要删除的对象，同时将互斥锁保存在_objectsToDelete 
+        // 列表中，但是删除此作用域锁之外的对象，这样，如果删除了任何对象
+        // 取消引用其子对象，则不会发生死锁。
         OpenThreads::ScopedLock<OpenThreads::Mutex> lock(_mutex);
         unsigned int frameNumberToClearTo = _currentFrameNumber - _numFramesToRetainObjects;
 
@@ -60,13 +63,16 @@ void DeleteHandler::flush()
     {
         doDelete(*ditr);
     }
-
+   // 为什么不直接遍历_objectsToDete并删除对象呢？ 因为删除操作会使迭代器失效，
+   // 所以，先收集，再删除，同时在最开始进行加锁保护。
 }
 
 void DeleteHandler::flushAll()
 {
     unsigned int temp_numFramesToRetainObjects = _numFramesToRetainObjects;
-    _numFramesToRetainObjects = 0;
+    _numFramesToRetainObjects = 0; 
+    // _numFramesToRetainObjects=0,保证执行flashAll过程中，
+    // 对_objectsToDete列表的不会进行添加，而直接执行删除操作。
 
     typedef std::list<const osg::Referenced*> DeletionList;
     DeletionList deletionList;
